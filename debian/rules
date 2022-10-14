@@ -1,0 +1,34 @@
+#!/usr/bin/make -f
+ifneq ($(filter pkg.node-rollup-plugin-node-resolve.transpilebabel,$(DEB_BUILD_PROFILES)),)
+TRANSPILE_PROF?=babel6
+BABEL_PRESET?=env
+export BABEL_PRESET
+else ifneq ($(filter pkg.node-rollup-plugin-node-resolve.transpilebuble,$(DEB_BUILD_PROFILES)),)
+TRANSPILE_PROF?=buble
+else ifneq ($(filter pkg.node-rollup-plugin-node-resolve.transpilenone,$(DEB_BUILD_PROFILES)),)
+TRANSPILE_PROF?=none
+else
+TRANSPILE_PROF?=none
+endif
+TRANSPILE?=$(TRANSPILE_PROF)
+export TRANSPILE
+
+
+%:
+	echo "TRANSPILE $$TRANSPILE"
+	dh $@
+
+override_dh_auto_build:
+	# Build legacy module
+	dh_auto_build --buildsystem=nodejs
+	# Build @rollup/plugin-node-resolve
+	cd packages/node-resolve; if rollup -c; then \
+		echo "build succeeds"; \
+	else \
+		echo "build failed, trying with legacy rollup plugins"; \
+		rollup -c ../../debian/rollup-legacy.config.js; \
+	fi
+
+override_dh_fixperms:
+	dh_fixperms
+	find debian/node-rollup-plugin-node-resolve -type f -name '*.ts' -exec chmod -x {} \;

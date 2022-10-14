@@ -1,0 +1,48 @@
+Source: node-rollup-plugin-node-resolve
+Section: javascript
+Priority: optional
+Maintainer: Debian Javascript Maintainers <pkg-javascript-devel@lists.alioth.debian.org>
+Uploaders: Julien Puydt <jpuydt@debian.org>
+Build-Depends: debhelper-compat (= 13)
+ , mocha <!nocheck>
+ , node-builtin-modules
+ , node-deepmerge <!nocheck>
+ , node-graceful-fs
+ , node-is-module
+ , node-buble <!nocheck>
+ , node-resolve
+ , node-rollup-plugin-babel <!pkg.node-rollup-plugin-node-resolve.transpilebuble>
+ , node-rollup-plugin-buble <pkg.node-rollup-plugin-node-resolve.transpilebuble>
+ , node-rollup-plugin-buble <!nocheck>
+ , node-rollup-plugin-commonjs (>= 14) <!nocheck>
+ , node-rollup-plugin-json
+ , node-tape <!nocheck>
+ , nodejs (>= 10)
+ , dh-sequence-nodejs
+ , rollup (>= 1)
+Standards-Version: 4.6.0
+Rules-Requires-Root: no
+Homepage: https://github.com/rollup/plugins
+Vcs-Git: https://salsa.debian.org/js-team/node-rollup-plugin-node-resolve.git
+Vcs-Browser: https://salsa.debian.org/js-team/node-rollup-plugin-node-resolve
+Testsuite: autopkgtest-pkg-nodejs
+
+Package: node-rollup-plugin-node-resolve
+Architecture: all
+Depends: ${misc:Depends}
+ , node-builtin-modules
+ , node-deepmerge
+ , node-is-module
+ , node-resolve (>= 1.1.6)
+ , node-rollup-pluginutils (>= 3.1.0)
+ , nodejs (>=10)
+Recommends:
+ rollup
+Enhances:
+ rollup
+Breaks: rollup (<< 2.34.1-3~)
+Description: rollup plugin to bundle third-party dependencies
+ This rollup plugin is responsible of bundling the third-party dependencies
+ in the node_modules directory.
+ .
+ Node.js is an event-based server-side JavaScript engine.

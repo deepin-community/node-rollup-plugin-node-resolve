@@ -1,0 +1,4 @@
+for i in packages/node-resolve/test/*.js; do
+	echo "## $i"
+	tape $i
+done
