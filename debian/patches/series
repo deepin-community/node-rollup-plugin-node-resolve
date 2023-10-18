@@ -1,1 +1,2 @@
 switch-test-from-ava-to-tape.diff
+drop-test-only-for-rollup-3.patch

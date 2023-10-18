@@ -3,8 +3,14 @@ Upstream-Name: @rollup/plugin-node-resolve
 Upstream-Contact: https://github.com/rollup/plugins/issues
 Source: https://github.com/rollup/plugins
  https://github.com/rollup/rollup-plugin-node-resolve
-Files-Excluded: *
-Files-Included: packages/node-resolve shared util
+Files-Excluded: packages/alias packages/auto-install packages/beep packages/buble
+ packages/babel packages/commonjs packages/data-uri packages/dsv
+ packages/dynamic-import-vars packages/eslint packages/graphql packages/html
+ packages/image packages/inject packages/json packages/legacy
+ packages/multi-entry packages/pluginutils packages/replace packages/run
+ packages/strip packages/sucrase packages/typescript packages/url
+ packages/virtual packages/wasm packages/yaml packages/terser
+ packages/esm-shim packages/swc
 
 Files: *
 Copyright: 2019 RollupJS Plugin Contributors <https://github.com/rollup/plugins/graphs/contributors>

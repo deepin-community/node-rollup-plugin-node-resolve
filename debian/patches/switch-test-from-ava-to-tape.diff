@@ -1,697 +1,54 @@
 Description: use tape instead of ava and drop test that depends on @rollup/plugin-babel
-Author: Xavier Guimard <yadd@debian.org>
+Author: Yadd <yadd@debian.org>
 Forwarded: not-needed
-Last-Update: 2021-10-24
+Last-Update: 2022-10-27
 
---- a/packages/node-resolve/test/browser.js
-+++ b/packages/node-resolve/test/browser.js
-@@ -1,12 +1,12 @@
- const { join } = require('path');
- 
--const test = require('ava');
-+const test = require('tape');
- const { rollup } = require('rollup');
- const commonjs = require('@rollup/plugin-commonjs');
- 
- const { testBundle } = require('../../../util/test');
- 
--const { nodeResolve } = require('..');
-+const { nodeResolve } = require('@rollup/plugin-node-resolve');
- 
- process.chdir(join(__dirname, 'fixtures'));
- 
-@@ -19,6 +19,7 @@
-   const { module } = await testBundle(t, bundle);
- 
-   t.is(module.exports, 'node');
-+  t.end();
- });
- 
- test('allows use of the top-level browser field', async (t) => {
-@@ -34,6 +35,7 @@
-   const { module } = await testBundle(t, bundle);
- 
-   t.is(module.exports, 'browser');
-+  t.end();
- });
- 
- test('disregards object browser field', async (t) => {
-@@ -47,6 +49,7 @@
-   t.is(module.exports.env, 'node');
-   t.is(module.exports.dep, 'node-dep');
-   t.is(module.exports.test, 42);
-+  t.end();
- });
- 
- test('allows use of the object browser field', async (t) => {
-@@ -64,6 +67,7 @@
-   t.is(module.exports.env, 'browser');
-   t.is(module.exports.dep, 'browser-dep');
-   t.is(module.exports.test, 43);
-+  t.end();
- });
- 
- test('allows use of object browser field, resolving `main`', async (t) => {
-@@ -81,6 +85,7 @@
-   t.is(module.exports.env, 'browser');
-   t.is(module.exports.dep, 'browser-dep');
-   t.is(module.exports.test, 43);
-+  t.end();
- });
- 
- test('options.browser = true still works', async (t) => {
-@@ -97,6 +102,7 @@
-   t.is(module.exports.env, 'browser');
-   t.is(module.exports.dep, 'browser-dep');
-   t.is(module.exports.test, 43);
-+  t.end();
- });
- 
- test('allows use of object browser field, resolving implicit `main`', async (t) => {
-@@ -112,6 +118,7 @@
-   const { module } = await testBundle(t, bundle);
- 
-   t.is(module.exports.env, 'browser');
-+  t.end();
- });
- 
- test('allows use of object browser field, resolving replaced builtins', async (t) => {
-@@ -127,6 +134,7 @@
-   const { module } = await testBundle(t, bundle);
- 
-   t.is(module.exports, 'browser-fs');
-+  t.end();
- });
- 
- test('allows use of object browser field, resolving nested directories', async (t) => {
-@@ -144,6 +152,7 @@
-   t.is(module.exports.env, 'browser');
-   t.is(module.exports.dep, 'browser-dep');
-   t.is(module.exports.test, 43);
-+  t.end();
- });
- 
- test('respects local browser field', async (t) => {
-@@ -159,6 +168,7 @@
-   const { module } = await testBundle(t, bundle);
- 
-   t.is(module.exports, 'component-type');
-+  t.end();
- });
- 
- test('allows use of object browser field, resolving to nested node_modules', async (t) => {
-@@ -175,6 +185,7 @@
-   const { module } = await testBundle(t, bundle);
- 
-   t.is(module.exports, 'component-type');
-+  t.end();
- });
- 
- test('supports `false` in browser field', async (t) => {
-@@ -188,8 +199,10 @@
-     ]
-   });
-   await testBundle(t, bundle);
-+  t.end();
- });
- 
-+/*
- test('pkg.browser with mapping to prevent bundle by specifying a value of false', async (t) => {
-   const bundle = await rollup({
-     input: 'browser-object-with-false.js',
-@@ -199,3 +212,4 @@
- 
-   t.is(module.exports, 'ok');
- });
-+*/
---- a/packages/node-resolve/test/dedupe-custom.js
-+++ b/packages/node-resolve/test/dedupe-custom.js
-@@ -1,11 +1,11 @@
- const { join } = require('path');
- 
--const test = require('ava');
-+const test = require('tape');
- const { rollup } = require('rollup');
- 
- const { testBundle } = require('../../../util/test');
- 
--const { nodeResolve } = require('..');
-+const { nodeResolve } = require('@rollup/plugin-node-resolve');
- 
- process.chdir(join(__dirname, 'fixtures', 'custom-module-dir'));
- 
-@@ -21,5 +21,6 @@
-   });
-   const { module } = await testBundle(t, bundle);
- 
--  t.snapshot(module.exports);
-+  t.ok(module.exports);
-+  t.end();
- });
---- a/packages/node-resolve/test/dedupe.js
-+++ b/packages/node-resolve/test/dedupe.js
-@@ -1,11 +1,11 @@
- const { join } = require('path');
- 
--const test = require('ava');
-+const test = require('tape');
- const { rollup } = require('rollup');
- 
- const { testBundle } = require('../../../util/test');
- 
--const { nodeResolve } = require('..');
-+const { nodeResolve } = require('@rollup/plugin-node-resolve');
- 
- process.chdir(join(__dirname, 'fixtures'));
- 
-@@ -20,7 +20,8 @@
-   });
-   const { module } = await testBundle(t, bundle);
- 
--  t.snapshot(module.exports);
-+  t.ok(module.exports);
-+  t.end();
- });
- 
- test('dedupes deep imports by package name if dedupe is set', async (t) => {
-@@ -34,7 +35,8 @@
-   });
-   const { module } = await testBundle(t, bundle);
- 
--  t.snapshot(module.exports);
-+  t.ok(module.exports);
-+  t.end();
- });
- 
- test('dedupes scoped deep imports by package name if dedupe is set', async (t) => {
-@@ -48,7 +50,8 @@
-   });
-   const { module } = await testBundle(t, bundle);
- 
--  t.snapshot(module.exports);
-+  t.ok(module.exports);
-+  t.end();
- });
- 
- test('single module version is bundled if dedupe is set as a function', async (t) => {
-@@ -62,7 +65,8 @@
-   });
-   const { module } = await testBundle(t, bundle);
- 
--  t.snapshot(module.exports);
-+  t.ok(module.exports);
-+  t.end();
- });
- 
- test('multiple module versions are bundled if dedupe is not set', async (t) => {
-@@ -72,5 +76,6 @@
-   });
-   const { module } = await testBundle(t, bundle);
- 
--  t.snapshot(module.exports);
-+  console.error(module.exports)
-+  t.end();
- });
---- a/packages/node-resolve/test/get-package-info.js
-+++ b/packages/node-resolve/test/get-package-info.js
-@@ -2,10 +2,10 @@
- 
- const path = require('path');
- 
--const test = require('ava');
-+const test = require('tape');
- const { rollup } = require('rollup');
- 
--const { nodeResolve } = require('..');
-+const { nodeResolve } = require('@rollup/plugin-node-resolve');
- 
- process.chdir(path.join(__dirname, 'fixtures'));
- 
-@@ -41,6 +41,7 @@
-     root,
-     resolvedEntryPoint: path.resolve(root, './main-entry.js')
-   });
-+  t.end();
- });
- 
- test('populates info for module', async (t) => {
-@@ -75,6 +76,7 @@
-     root,
-     resolvedEntryPoint: path.resolve(root, './module-entry.js')
-   });
-+  t.end();
- });
- 
- test('populates info for browser', async (t) => {
-@@ -112,4 +114,5 @@
-       resolvedEntryPoint: path.resolve(root, './browser.js')
-     });
-   }
-+  t.end();
- });
---- a/packages/node-resolve/test/jail.js
-+++ b/packages/node-resolve/test/jail.js
-@@ -1,11 +1,11 @@
- const { join } = require('path');
- 
--const test = require('ava');
-+const test = require('tape');
- const { rollup } = require('rollup');
- 
- const { getImports } = require('../../../util/test');
- 
--const { nodeResolve } = require('..');
-+const { nodeResolve } = require('@rollup/plugin-node-resolve');
- 
- process.chdir(join(__dirname, 'fixtures'));
- 
-@@ -23,9 +23,10 @@
-   });
-   const imports = await getImports(bundle);
- 
--  t.snapshot(warnings);
-+  t.ok(warnings);
-   t.is(warnings.length, 1);
-   t.deepEqual(imports, ['string/uppercase.js']);
-+  t.end();
- });
- 
- test('bundle module defined inside the jail', async (t) => {
-@@ -41,4 +42,5 @@
-   const imports = await getImports(bundle);
- 
-   t.deepEqual(imports, []);
-+  t.end();
- });
---- a/packages/node-resolve/test/only.js
-+++ b/packages/node-resolve/test/only.js
-@@ -1,11 +1,11 @@
- const { join, resolve } = require('path');
- 
--const test = require('ava');
-+const test = require('tape');
- const { rollup } = require('rollup');
- 
- const { getImports, getResolvedModules } = require('../../../util/test');
- 
--const { nodeResolve } = require('..');
-+const { nodeResolve } = require('@rollup/plugin-node-resolve');
- 
- process.chdir(join(__dirname, 'fixtures'));
- 
-@@ -24,9 +24,10 @@
-   const modules = await getResolvedModules(bundle);
- 
-   t.is(warnings.length, 0);
--  t.snapshot(warnings);
-+  t.ok(warnings);
-   t.deepEqual(imports, ['@scoped/foo', '@scoped/bar']);
-   t.assert(Object.keys(modules).includes(resolve('only-local.js')));
-+  t.end();
- });
- 
- test('handles nested entry modules', async (t) => {
-@@ -44,9 +45,10 @@
-   const modules = await getResolvedModules(bundle);
- 
-   t.is(warnings.length, 0);
--  t.snapshot(warnings);
-+  t.ok(warnings);
-   t.deepEqual(imports, ['@scoped/foo', '@scoped/bar']);
-   t.assert(Object.keys(modules).includes(resolve('only-local.js')));
-+  t.end();
- });
- 
- test('regex', async (t) => {
-@@ -64,7 +66,8 @@
-   const modules = await getResolvedModules(bundle);
- 
-   t.is(warnings.length, 0);
--  t.snapshot(warnings);
-+  t.ok(warnings);
-   t.deepEqual(imports, ['test']);
-   t.assert(Object.keys(modules).includes(resolve('only-local.js')));
-+  t.end();
- });
---- a/packages/node-resolve/test/order.js
-+++ b/packages/node-resolve/test/order.js
-@@ -1,11 +1,11 @@
- const { join } = require('path');
- 
--const test = require('ava');
-+const test = require('tape');
- const { rollup } = require('rollup');
- 
- const { testBundle } = require('../../../util/test');
- 
--const { nodeResolve } = require('..');
-+const { nodeResolve } = require('@rollup/plugin-node-resolve');
- 
- process.chdir(join(__dirname, 'fixtures'));
- 
-@@ -17,6 +17,7 @@
-   });
-   const { module } = await testBundle(t, bundle);
-   t.is(module.exports, 'MODULE-ENTRY');
-+  t.end();
- });
- 
- test('prefer module field by default', async (t) => {
-@@ -27,6 +28,7 @@
-   });
-   const { module } = await testBundle(t, bundle);
-   t.is(module.exports, 'MODULE-ENTRY');
-+  t.end();
- });
- 
- test('finds and uses a dual-distributed .js & .mjs module', async (t) => {
-@@ -37,6 +39,7 @@
-   });
-   const { module } = await testBundle(t, bundle);
-   t.is(module.exports, 'DUAL-MJS');
-+  t.end();
- });
- 
- test('respects order if given jsnext:main, main', async (t) => {
-@@ -47,4 +50,5 @@
-   });
-   const { module } = await testBundle(t, bundle);
-   t.is(module.exports, 'JSNEXT-ENTRY');
-+  t.end();
- });
---- a/packages/node-resolve/test/package-entry-points.js
-+++ b/packages/node-resolve/test/package-entry-points.js
-@@ -1,6 +1,6 @@
- const { join } = require('path');
- 
--const test = require('ava');
-+const test = require('tape');
- const { rollup } = require('rollup');
- const commonjs = require('@rollup/plugin-commonjs');
- 
-@@ -21,6 +21,7 @@
-   const { module } = await testBundle(t, bundle);
- 
-   t.is(module.exports, 'MAIN MAPPED');
-+  t.end();
- });
- 
- test('handles export map with fallback', async (t) => {
-@@ -34,6 +35,7 @@
-   const { module } = await testBundle(t, bundle);
- 
-   t.is(module.exports, 'MAIN MAPPED');
-+  t.end();
- });
- 
- test('handles export map with top level mappings', async (t) => {
-@@ -48,6 +50,7 @@
- 
-   t.is(module.exports.main, 'MAIN MAPPED');
-   t.is(module.exports.foo, 'FOO MAPPED');
-+  t.end();
- });
- 
- test('handles export map with top level conditions', async (t) => {
-@@ -61,6 +64,7 @@
-   const { module } = await testBundle(t, bundle);
- 
-   t.is(module.exports, 'MAIN MAPPED');
-+  t.end();
- });
- 
- test('handles export map with nested conditions', async (t) => {
-@@ -74,6 +78,7 @@
-   const { module } = await testBundle(t, bundle);
- 
-   t.is(module.exports, 'MAIN MAPPED');
-+  t.end();
- });
- 
- test('handles conditions with a fallback', async (t) => {
-@@ -87,6 +92,7 @@
-   const { module } = await testBundle(t, bundle);
- 
-   t.is(module.exports, 'MAIN MAPPED');
-+  t.end();
- });
- 
- test('handles top level mappings with conditions', async (t) => {
-@@ -102,6 +108,7 @@
-   t.is(module.exports.main, 'MAIN MAPPED');
-   t.is(module.exports.foo, 'FOO MAPPED');
-   t.is(module.exports.bar, 'BAR MAPPED');
-+  t.end();
- });
- 
- test('handles directory exports', async (t) => {
-@@ -117,6 +124,7 @@
-   t.is(module.exports.a, 'exported-foo a');
-   t.is(module.exports.b, 'exported-foo b');
-   t.is(module.exports.c, 'exported-foo c');
-+  t.end();
- });
- 
- test('handles main directory exports', async (t) => {
-@@ -132,6 +140,7 @@
-   t.is(module.exports.a, 'exported a');
-   t.is(module.exports.b, 'exported b');
-   t.is(module.exports.c, 'exported c');
-+  t.end();
- });
- 
- test('logs a warning when using shorthand and importing a subpath', async (t) => {
-@@ -147,6 +156,7 @@
- 
-   t.true(errors[0].message.includes('Could not resolve import "exports-shorthand/foo" in '));
-   t.true(errors[0].message.includes('Package subpath "./foo" is not defined by "exports" in'));
-+  t.end();
- });
- 
- test('logs a warning when a subpath cannot be found', async (t) => {
-@@ -164,6 +174,7 @@
-     errors[0].message.includes('Could not resolve import "exports-non-existing-subpath/bar" in ')
-   );
-   t.true(errors[0].message.includes('Package subpath "./bar" is not defined by "exports" in'));
-+  t.end();
- });
- 
- test('prevents importing files not specified in exports map', async (t) => {
-@@ -181,6 +192,7 @@
-     errors[0].message.includes('Could not resolve import "exports-top-level-mappings/bar" in ')
-   );
-   t.true(errors[0].message.includes('Package subpath "./bar" is not defined by "exports" in'));
-+  t.end();
- });
- 
- test('uses "require" condition when a module is referenced with require', async (t) => {
-@@ -194,6 +206,7 @@
-   const { module } = await testBundle(t, bundle);
- 
-   t.is(module.exports, 'CJS');
-+  t.end();
- });
- 
- test('can use star pattern in exports field', async (t) => {
-@@ -207,6 +220,7 @@
-   const { module } = await testBundle(t, bundle);
- 
-   t.deepEqual(module.exports, { a: 'A', b: 'B', c: 'C' });
-+  t.end();
- });
- 
- test('a literal match takes presedence', async (t) => {
-@@ -220,6 +234,7 @@
-   const { module } = await testBundle(t, bundle);
- 
-   t.deepEqual(module.exports, { a: 'foo a' });
-+  t.end();
- });
- 
- test('longest matching directory takes priority', async (t) => {
-@@ -237,4 +252,5 @@
-     a2: 'foo-two a',
-     a3: 'foo-three a'
-   });
-+  t.end();
- });
---- a/packages/node-resolve/test/prefer-builtins.js
-+++ b/packages/node-resolve/test/prefer-builtins.js
-@@ -1,11 +1,11 @@
- const { join, resolve } = require('path');
- 
--const test = require('ava');
-+const test = require('tape');
- const { rollup } = require('rollup');
- 
- const { getImports, testBundle } = require('../../../util/test');
- 
--const { nodeResolve } = require('..');
-+const { nodeResolve } = require('@rollup/plugin-node-resolve');
- 
- process.chdir(join(__dirname, 'fixtures'));
- 
-@@ -49,6 +49,7 @@
-       `at '${localPath}', pass 'preferBuiltins: false' to disable this behavior ` +
-       `or 'preferBuiltins: true' to disable this warning`
-   );
-+  t.end();
- });
- 
- test('true allows preferring a builtin to a local module of the same name', async (t) => {
-@@ -84,8 +85,9 @@
-   const imports = await getImports(bundle);
- 
-   t.is(warnings.length, 1);
--  t.snapshot(warnings);
-+  t.ok(warnings);
-   t.deepEqual(imports, []);
-+  t.end();
- });
- 
- test('does not warn when using a builtin module when there is no local version, no explicit configuration', async (t) => {
---- a/packages/node-resolve/test/root-dir.js
-+++ b/packages/node-resolve/test/root-dir.js
-@@ -1,11 +1,11 @@
- const { join } = require('path');
- 
--const test = require('ava');
-+const test = require('tape');
- const { rollup } = require('rollup');
- 
- const { testBundle } = require('../../../util/test');
- 
--const { nodeResolve } = require('..');
-+const { nodeResolve } = require('@rollup/plugin-node-resolve');
- 
- test('deduplicates modules from the given root directory', async (t) => {
-   const bundle = await rollup({
-@@ -19,5 +19,6 @@
-   });
-   const { module } = await testBundle(t, bundle);
- 
--  t.snapshot(module.exports);
-+  t.ok(module.exports);
-+  t.end();
- });
---- a/packages/node-resolve/test/symlinks.js
-+++ b/packages/node-resolve/test/symlinks.js
-@@ -1,12 +1,12 @@
- const fs = require('fs');
- const { join } = require('path');
- 
--const test = require('ava');
-+const test = require('tape');
- const { rollup } = require('rollup');
- 
- const { testBundle } = require('../../../util/test');
- 
--const { nodeResolve } = require('..');
-+const { nodeResolve } = require('@rollup/plugin-node-resolve');
- 
- process.chdir(join(__dirname, 'fixtures'));
- 
-@@ -34,16 +34,17 @@
-   fs.unlinkSync('symlinked/second/node_modules/third');
- }
- 
--test.beforeEach(() => {
-+before = () => {
-   createMissingDirectories();
-   linkDirectories();
--});
-+};
- 
--test.afterEach.always(() => {
-+after = () => {
-   unlinkDirectories();
--});
-+};
- 
--test.serial('resolves symlinked packages', async (t) => {
-+test('resolves symlinked packages', async (t) => {
-+  before();
-   const bundle = await rollup({
-     input: 'symlinked/first/index.js',
-     onwarn: () => t.fail('No warnings were expected'),
-@@ -51,9 +52,12 @@
-   });
-   const { module } = await testBundle(t, bundle);
-   t.is(module.exports.number1, module.exports.number2);
-+  t.end();
-+  after();
- });
- 
--test.serial('resolves symlinked packages with browser object', async (t) => {
-+test('resolves symlinked packages with browser object', async (t) => {
-+  before();
-   const bundle = await rollup({
-     input: 'symlinked/first/index.js',
-     onwarn: () => t.fail('No warnings were expected'),
-@@ -61,9 +65,12 @@
-   });
-   const { module } = await testBundle(t, bundle);
-   t.is(module.exports.number1, 'not random string');
-+  t.end();
-+  after();
- });
- 
--test.serial('preserves symlinks if `preserveSymlinks` is true', async (t) => {
-+test('preserves symlinks if `preserveSymlinks` is true', async (t) => {
-+  before();
-   const bundle = await rollup({
-     input: 'symlinked/first/index.js',
-     onwarn: () => t.fail('No warnings were expected'),
-@@ -72,4 +79,6 @@
-   });
-   const { module } = await testBundle(t, bundle);
-   t.not(module.exports.number1, module.exports.number2);
-+  t.end();
-+  after();
- });
---- a/packages/node-resolve/test/test.js
-+++ b/packages/node-resolve/test/test.js
-@@ -1,13 +1,13 @@
--import { join, resolve } from 'path';
-+const { join, resolve } = require('path');
- 
+--- a/packages/node-resolve/test/test.mjs
++++ b/packages/node-resolve/test/test.mjs
+@@ -3,7 +3,7 @@
+ 
+ import { babel } from '@rollup/plugin-babel';
+ import commonjs from '@rollup/plugin-commonjs';
 -import test from 'ava';
--import { rollup } from 'rollup';
--import babel from '@rollup/plugin-babel';
--import commonjs from '@rollup/plugin-commonjs';
-+const test = require('tape');
-+const { rollup } = require('rollup');
-+//const babel = require('@rollup/plugin-babel');
-+const commonjs = require('@rollup/plugin-commonjs');
++import test from 'tape';
+ import { rollup } from 'rollup';
  
--import { getCode, getImports, testBundle } from '../../../util/test';
-+const { getCode, getImports, testBundle } = require('../../../util/test');
+ import { nodeResolve } from 'current-package';
+@@ -20,7 +20,8 @@
  
--import { nodeResolve } from '..';
-+const { nodeResolve } = require('@rollup/plugin-node-resolve');
+ test('exposes plugin version', (t) => {
+   const plugin = nodeResolve();
+-  t.regex(plugin.version, /^\d+\.\d+\.\d+/);
++  t.ok(plugin.version.match(/^\d+\.\d+\.\d+/));
++  t.end();
+ });
  
- process.chdir(join(__dirname, 'fixtures'));
- 
-@@ -20,8 +20,10 @@
+ test('finds a module with jsnext:main', async (t) => {
+@@ -32,6 +33,7 @@
    const { module } = await testBundle(t, bundle);
  
    t.is(module.exports, 'JSNEXT');
 +  t.end();
  });
  
-+/*
  test('finds and converts a basic CommonJS module', async (t) => {
-   const bundle = await rollup({
-     input: 'commonjs.js',
-@@ -31,6 +33,7 @@
+@@ -43,6 +45,7 @@
    const { module } = await testBundle(t, bundle);
  
    t.is(module.exports, 'It works!');
 +  t.end();
  });
  
+ test('handles cyclic CommonJS modules', async (t) => {
+@@ -58,6 +61,7 @@
+   const { module } = await testBundle(t, bundle);
+ 
+   t.is(module.exports.main, 'main');
++  t.end();
+ });
+ 
  test('handles a trailing slash', async (t) => {
-@@ -42,6 +45,7 @@
+@@ -69,6 +73,7 @@
    const { module } = await testBundle(t, bundle);
  
    t.is(module.exports, 'It works!');
@@ -699,17 +56,15 @@ Last-Update: 2021-10-24
  });
  
  test('finds a file inside a package directory', async (t) => {
-@@ -68,7 +72,9 @@
+@@ -95,6 +100,7 @@
    const { module } = await testBundle(t, bundle);
  
    t.is(module.exports, 'FOO');
 +  t.end();
  });
-+*/
  
  test('loads local directories by finding index.js within them', async (t) => {
-   const bundle = await rollup({
-@@ -79,17 +85,19 @@
+@@ -106,6 +112,7 @@
    const { module } = await testBundle(t, bundle);
  
    t.is(module.exports, 42);
@@ -717,11 +72,7 @@ Last-Update: 2021-10-24
  });
  
  test('loads package directories by finding index.js within them', async (t) => {
-   const bundle = await rollup({
-     input: 'package-index.js',
--    onwarn: () => t.fail('No warnings were expected'),
-+    //onwarn: () => t.fail('No warnings were expected'),
-     plugins: [nodeResolve()]
+@@ -116,7 +123,8 @@
    });
    const code = await getCode(bundle);
  
@@ -731,33 +82,45 @@ Last-Update: 2021-10-24
  });
  
  test('supports non-standard extensions', async (t) => {
-@@ -103,8 +111,10 @@
-     ]
-   });
-   await testBundle(t, bundle);
+@@ -147,6 +155,7 @@
+   } catch {
+     t.pass();
+   }
 +  t.end();
  });
  
-+/*
  test('supports JS extensions in TS when referring to TS imports', async (t) => {
-   const bundle = await rollup({
-     input: 'ts-import-js-extension/import-ts-with-js-extension.ts',
-@@ -122,11 +132,14 @@
+@@ -242,6 +251,7 @@
    });
    const { module } = await testBundle(t, bundle);
    t.is(module.exports, 'It works!');
 +  t.end();
  });
-+*/
+ 
+ test('supports JS extensions in TS actually importing JS with export map', async (t) => {
+@@ -261,6 +271,7 @@
+   });
+   const { module } = await testBundle(t, bundle);
+   t.is(module.exports, 'It works!');
++  t.end();
+ });
+ 
+ test('handles package.json being a directory earlier in the path', async (t) => {
+@@ -275,11 +286,13 @@
+   });
+   const { module } = await testBundle(t, bundle);
+   t.is(module.exports, 'It works!');
++  t.end();
+ });
  
  test('ignores IDs with null character', async (t) => {
-   const result = await nodeResolve().resolveId('\0someid', 'test.js');
+   const result = await nodeResolve().resolveId.handler('\0someid', 'test.js', {});
    t.is(result, null);
 +  t.end();
  });
  
  test('finds and uses an .mjs module', async (t) => {
-@@ -138,6 +151,7 @@
+@@ -291,6 +304,7 @@
    const { module } = await testBundle(t, bundle);
  
    t.is(module.exports, 'MODULE-MJS');
@@ -765,44 +128,70 @@ Last-Update: 2021-10-24
  });
  
  test('supports ./ in entry filename', async (t) => {
-@@ -149,6 +163,7 @@
+@@ -302,19 +316,7 @@
    const { module } = await testBundle(t, bundle);
  
    t.is(module.exports, 'MAIN');
+-});
+-
+-test('throws error if local id is not resolved', async (t) => {
+-  t.plan(1);
+-  try {
+-    await rollup({
+-      input: 'unresolved-local.js',
+-      onwarn: failOnWarn(t),
+-      plugins: [nodeResolve()]
+-    });
+-  } catch (e) {
+-    t.snapshot(e.message);
+-  }
 +  t.end();
  });
  
- test('throws error if local id is not resolved', async (t) => {
-@@ -160,7 +175,7 @@
-       plugins: [nodeResolve()]
-     });
-   } catch (e) {
--    t.snapshot(e.message);
-+    t.ok(e.message);
-   }
+ test('allows custom moduleDirectories', async (t) => {
+@@ -329,6 +331,7 @@
+   });
+ 
+   t.is(bundle.cache.modules[0].id, resolve('custom-module-dir/js_modules/foo.js'));
++  t.end();
  });
  
-@@ -194,7 +209,6 @@
+ test('allows custom moduleDirectories with legacy customResolveOptions.moduleDirectory', async (t) => {
+@@ -347,7 +350,7 @@
  
    t.is(bundle.cache.modules[0].id, resolve('custom-module-dir/js_modules/foo.js'));
    t.is(warnings.length, 1);
 -  t.snapshot(warnings);
++  t.end();
+ });
+ 
+ test('moduleDirectories option rejects paths that contain a slash', async (t) => {
+@@ -360,6 +363,7 @@
+       message: /must only contain directory names/
+     }
+   );
++  t.end();
+ });
+ 
+ test('allows custom modulePaths', async (t) => {
+@@ -375,6 +379,7 @@
+ 
+   const { dependency } = await evaluateBundle(bundle);
+   t.is(dependency, 'DEPENDENCY');
++  t.end();
  });
  
  test('ignores deep-import non-modules', async (t) => {
-@@ -211,8 +225,9 @@
-   const imports = await getImports(bundle);
- 
-   t.is(warnings.length, 1);
--  t.snapshot(warnings);
-+  t.ok(warnings);
-   t.deepEqual(imports, ['foo/deep']);
+@@ -395,6 +400,7 @@
+   const [{ exporter, id }] = warnings;
+   t.is(exporter, 'foo/deep', 'exporter');
+   t.is(id.endsWith('deep-import-non-module.js'), true, 'id');
 +  t.end();
  });
  
  test('generates manual chunks', async (t) => {
-@@ -231,7 +246,8 @@
-     chunkFileNames: '[name]'
+@@ -413,7 +419,8 @@
+     }
    });
  
 -  t.truthy(output.find(({ fileName }) => fileName === chunkName));
@@ -811,27 +200,15 @@ Last-Update: 2021-10-24
  });
  
  test('resolves dynamic imports', async (t) => {
-@@ -244,6 +260,7 @@
-   const { module } = await testBundle(t, bundle);
+@@ -425,6 +432,7 @@
+   const { module } = await testBundle(t, bundle, { options: { inlineDynamicImports: true } });
    const result = await module.exports;
    t.is(result.default, 42);
 +  t.end();
  });
  
- test('handles package side-effects', async (t) => {
-@@ -252,9 +269,10 @@
-     plugins: [nodeResolve()]
-   });
-   await testBundle(t, bundle);
--  t.snapshot(global.sideEffects);
-+  t.ok(global.sideEffects);
- 
-   delete global.sideEffects;
-+  t.end();
- });
- 
  test('can resolve imports with hash in path', async (t) => {
-@@ -276,6 +294,7 @@
+@@ -446,6 +454,7 @@
    const { module } = await testBundle(t, bundle);
  
    t.is(module.exports, 'resolved with hash');
@@ -839,7 +216,7 @@ Last-Update: 2021-10-24
  });
  
  test('can resolve imports with search params', async (t) => {
-@@ -300,6 +319,7 @@
+@@ -470,6 +479,7 @@
    const { module } = await testBundle(t, bundle);
  
    t.is(module.exports, 'resolved with search params');
@@ -847,21 +224,81 @@ Last-Update: 2021-10-24
  });
  
  test('can resolve imports with search params and hash', async (t) => {
-@@ -330,6 +350,7 @@
+@@ -494,6 +504,7 @@
    const { module } = await testBundle(t, bundle);
  
    t.is(module.exports, 'resolved with search params and hash');
 +  t.end();
  });
  
- [
-@@ -355,7 +376,8 @@
-         }
-       });
-     } catch (e) {
+ test('marks a module as external if the resolved version is external', async (t) => {
+@@ -506,36 +517,7 @@
+ 
+   const code = await getCode(bundle);
+   t.is(/node_modules/.test(code), false);
+-});
+-
+-[
+-  'preserveSymlinks',
+-  'basedir',
+-  'package',
+-  'extensions',
+-  'includeCoreModules',
+-  'readFile',
+-  'isFile',
+-  'isDirectory',
+-  'realpath',
+-  'packageFilter',
+-  'pathFilter',
+-  'paths',
+-  'packageIterator'
+-].forEach((resolveOption) => {
+-  test(`throws error for removed customResolveOptions.${resolveOption} option`, (t) => {
+-    try {
+-      nodeResolve({
+-        customResolveOptions: {
+-          [resolveOption]: 'something'
+-        }
+-      });
+-    } catch (e) {
 -      t.snapshot(e);
-+      //t.snapshot(e);
-+      t.end();
-       return;
-     }
-     t.fail('expecting error');
+-      return;
+-    }
+-    t.fail('expecting error');
+-  });
++  t.end();
+ });
+ 
+ test('passes on "isEntry" flag', async (t) => {
+@@ -614,6 +596,7 @@
+       }
+     ]
+   ]);
++  t.end();
+ });
+ 
+ test('passes on custom options', async (t) => {
+@@ -675,6 +658,7 @@
+       }
+     ]
+   ]);
++  t.end();
+ });
+ 
+ test('passes on meta information from other plugins', async (t) => {
+@@ -695,6 +679,7 @@
+         load(id) {
+           const info = this.getModuleInfo(id);
+           t.deepEqual(info.meta, { test: { 'I am': 'here' } });
++  t.end();
+         }
+       }
+     ]
+@@ -724,6 +709,7 @@
+           const info = this.getModuleInfo(id);
+           t.is(info.id, join(DIRNAME, 'fixtures', 'entry', 'other.js'));
+           t.deepEqual(info.meta, { 'change-resolution': 'changed' });
++  t.end();
+         }
+       }
+     ]

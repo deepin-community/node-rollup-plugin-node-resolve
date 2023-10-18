@@ -40,7 +40,16 @@ export function getMainFields(options) {
 }
 
 export function getPackageInfo(options) {
-  const { cache, extensions, pkg, mainFields, preserveSymlinks, useBrowserOverrides } = options;
+  const {
+    cache,
+    extensions,
+    pkg,
+    mainFields,
+    preserveSymlinks,
+    useBrowserOverrides,
+    rootDir,
+    ignoreSideEffectsForRoot
+  } = options;
   let { pkgPath } = options;
 
   if (cache.has(pkgPath)) {
@@ -130,13 +139,25 @@ export function getPackageInfo(options) {
     packageInfo.browserMappedMain = false;
   }
 
-  const packageSideEffects = pkg.sideEffects;
-  if (typeof packageSideEffects === 'boolean') {
-    internalPackageInfo.hasModuleSideEffects = () => packageSideEffects;
-  } else if (Array.isArray(packageSideEffects)) {
-    internalPackageInfo.hasModuleSideEffects = createFilter(packageSideEffects, null, {
-      resolve: pkgRoot
-    });
+  if (!ignoreSideEffectsForRoot || rootDir !== pkgRoot) {
+    const packageSideEffects = pkg.sideEffects;
+    if (typeof packageSideEffects === 'boolean') {
+      internalPackageInfo.hasModuleSideEffects = () => packageSideEffects;
+    } else if (Array.isArray(packageSideEffects)) {
+      const finalPackageSideEffects = packageSideEffects.map((sideEffect) => {
+        /*
+         * The array accepts simple glob patterns to the relevant files... Patterns like .css, which do not include a /, will be treated like **\/.css.
+         * https://webpack.js.org/guides/tree-shaking/
+         */
+        if (sideEffect.includes('/')) {
+          return sideEffect;
+        }
+        return `**/${sideEffect}`;
+      });
+      internalPackageInfo.hasModuleSideEffects = createFilter(finalPackageSideEffects, null, {
+        resolve: pkgRoot
+      });
+    }
   }
 
   cache.set(pkgPath, internalPackageInfo);

@@ -1,0 +1,12 @@
+deepmerge	test
+es5-ext	test
+is-builtin-module	test
+is-module	test
+resolve	test
+rollup	test
+@rollup/pluginutils	test
+@rollup/plugin-babel	test
+@rollup/plugin-commonjs	test
+@rollup/plugin-json
+@rollup/plugin-typescript
+tape	test

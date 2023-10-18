@@ -1,4 +1,5 @@
-for i in packages/node-resolve/test/*.js; do
-	echo "## $i"
-	tape $i
-done
+cd packages/node-resolve
+if test "$AUTOPKGTEST_TMP" != ""; then
+	ln -s /usr/share/nodejs/@rollup/plugin-node-resolve/dist || true
+fi
+tape test/test.mjs

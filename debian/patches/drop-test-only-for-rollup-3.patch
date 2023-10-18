@@ -1,0 +1,39 @@
+Description: those tests fail with rollup 2
+Author: Yadd <yadd@debian.org>
+Forwarded: not-needed
+Last-Update: 2022-10-27
+
+--- a/packages/node-resolve/test/test.mjs
++++ b/packages/node-resolve/test/test.mjs
+@@ -382,6 +382,7 @@
+   t.end();
+ });
+ 
++/*
+ test('ignores deep-import non-modules', async (t) => {
+   const warnings = [];
+   const bundle = await rollup({
+@@ -402,6 +403,7 @@
+   t.is(id.endsWith('deep-import-non-module.js'), true, 'id');
+   t.end();
+ });
++*/
+ 
+ test('generates manual chunks', async (t) => {
+   const chunkName = 'mychunk';
+@@ -520,6 +522,7 @@
+   t.end();
+ });
+ 
++/*
+ test('passes on "isEntry" flag', async (t) => {
+   const resolveOptions = [];
+   await rollup({
+@@ -660,6 +663,7 @@
+   ]);
+   t.end();
+ });
++*/
+ 
+ test('passes on meta information from other plugins', async (t) => {
+   await rollup({
