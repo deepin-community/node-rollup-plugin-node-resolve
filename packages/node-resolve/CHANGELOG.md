@@ -1,5 +1,240 @@
 # @rollup/plugin-node-resolve ChangeLog
 
+## v15.1.0
+
+_2023-05-30_
+
+### Features
+
+- feat: Resolve js/jsx/mjs/cjs imports from TypeScript files [#1498](https://github.com/rollup/plugins/pull/1498)
+
+## v15.0.2
+
+_2023-04-04_
+
+### Bugfixes
+
+- fix: bump is-builtin-module version, imports with a trailing slash [#1424](https://github.com/rollup/plugins/pull/1424)
+
+## v15.0.1
+
+_2022-10-21_
+
+### Updates
+
+- chore: update rollup dependencies ([3038271](https://github.com/rollup/plugins/commit/303827191ede6b2e4eade96c6968ed16a587683f))
+
+## v15.0.0
+
+_2022-10-10_
+
+### Breaking Changes
+
+- fix: prepare for Rollup 3 [#1288](https://github.com/rollup/plugins/pull/1288)
+
+## v14.1.0
+
+_2022-09-12_
+
+### Features
+
+- feat: add new option, modulePaths (#1104)
+
+## v14.0.1
+
+_2022-09-08_
+
+### Bugfixes
+
+- fix: handle circular commonjs (#1259)
+
+## v14.0.0
+
+_2022-09-06_
+
+### Breaking Changes
+
+- fix: preserve moduleSideEffects when re-resolving files (#1245)
+
+## v13.3.0
+
+_2022-05-02_
+
+### Features
+
+- feat: support `node:` protocol (#1124)
+
+## v13.2.2
+
+_2022-05-02_
+
+### Bugfixes
+
+- fix: Respect if other plugins resolve the resolution to a different id (#1181)
+- fix: Revert respect if other plugins resolve the resolution to a different id (ae59ceb)
+- fix: Respect if other plugins resolve the resolution to a different id (f8d4c44)
+
+## v13.2.1
+
+_2022-04-15_
+
+### Bugfixes
+
+- fix: update side effects logic to be deep when glob doesn’t contain `/` (#1148)
+
+## v13.2.0
+
+_2022-04-11_
+
+### Features
+
+- feat: Add the ability to pass a function into resolveOnly (#1152)
+
+## v13.1.3
+
+_2022-01-05_
+
+### Bugfixes
+
+- fix: use correct version when published (#1063)
+
+## v13.1.2
+
+_2021-12-31_
+
+### Bugfixes
+
+- fix: forward meta-information from other plugins (#1062)
+
+## v13.1.1
+
+_2021-12-13_
+
+### Updates
+
+- test: add tests for mixing custom `exportConditions` with `browser: true` (#1043)
+
+## v13.1.0
+
+_2021-12-13_
+
+### Features
+
+- feat: expose plugin version (#1050)
+
+## v13.0.6
+
+_2021-10-19_
+
+### Bugfixes
+
+- fix: pass on isEntry flag (#1016)
+
+## v13.0.5
+
+_2021-09-21_
+
+### Updates
+
+- docs: fix readme heading depth (#999)
+
+## v13.0.4
+
+_2021-07-24_
+
+### Bugfixes
+
+- fix: Fix bug where JS import was converted to a TS import, resulting in an error when using export maps (#921)
+
+## v13.0.3
+
+_2021-07-24_
+
+### Bugfixes
+
+- fix: handle browser-mapped paths correctly in nested contexts (#920)
+
+## v13.0.2
+
+_2021-07-15_
+
+### Bugfixes
+
+- fix: handle "package.json" being in path (#927)
+
+## v13.0.1
+
+_2021-07-15_
+
+### Updates
+
+- docs: Document how to get Node.js exports resolution (#884)
+
+## v13.0.0
+
+_2021-05-04_
+
+### Breaking Changes
+
+- fix!: mark module as external if resolved module is external (#799)
+
+### Features
+
+- feat: Follow up to #843, refining exports and browser field interaction (#866)
+
+## v12.0.0
+
+_2021-05-04_
+
+### Breaking Changes
+
+- fix!: mark module as external if resolved module is external (#799)
+
+### Features
+
+- feat: Follow up to #843, refining exports and browser field interaction (#866)
+
+## v11.2.1
+
+_2021-03-26_
+
+### Bugfixes
+
+- fix: fs.exists is incorrectly promisified (#835)
+
+## v11.2.0
+
+_2021-02-14_
+
+### Features
+
+- feat: add `ignoreSideEffectsForRoot` option (#694)
+
+### Updates
+
+- chore: mark `url` as an external and throw on warning (#783)
+- docs: clearer "Resolving Built-Ins" doc (#782)
+
+## v11.1.1
+
+_2021-01-29_
+
+### Bugfixes
+
+- fix: only log last resolve error (#750)
+
+### Updates
+
+- docs: add clarification on the order of package entrypoints (#768)
+
+## v11.1.0
+
+_2021-01-15_
+
+### Features
+
+- feat: support pkg imports and export array (#693)
+
 ## v11.0.1
 
 _2020-12-14_
